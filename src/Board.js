@@ -50,10 +50,31 @@ export default class Board extends React.Component {
       status: companyDetails[3],
     }));
   }
+  componentDidMount() {
+    this.dragAndDrop();
+  }
   renderSwimlane(name, clients, ref) {
     return (
       <Swimlane name={name} clients={clients} dragulaRef={ref}/>
     );
+  }
+  dragAndDrop(){
+    let tasks = Object.values(this.swimlanes).map(i => i.current);
+    this.task = Dragula(tasks);
+    this.task.on('drop',(x,y) =>{
+      let position = y.previousSibling.innerText;
+      switch(position){
+        case 'In Progress':
+          x.className = 'Card Card-blue';
+          break;
+        case 'Backlog':
+          x.className = 'Card Card-grey';
+          break;
+        case 'Complete':
+          x.className = 'Card Card-green';
+          break;
+      }
+    });
   }
 
   render() {
